@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: philos
+    relative_path: urdf/philos_urdf_new.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/philos.srdf
+  CONFIG:
+    author_name: Yanzhou Wang
+    author_email: yxw723@case.edu
+    generated_timestamp: 1555010651

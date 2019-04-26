@@ -1,0 +1,28 @@
+<launch>
+    <arg default="false" name="paused"/>
+    <arg default="true" name="use_sim_time"/>
+    <arg default="true" name="gui"/>
+    <arg default="false" name="headless"/>
+    <arg default="false" name="debug"/>
+    <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <!--arg name="world_name" value="$(find abby_gazebo)/worlds/abby.world"/-->
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="headless" value="$(arg headless)"/>
+    </include>
+    <!-- Robot model -->
+    <param command="$(find xacro)/xacro --inorder '$(find philos)/urdf/philos_urdf_new.xacro'" name="robot_description"/>
+    <!-- Spawn the robot model -->
+    <node args="-urdf -param robot_description -model philos" name="urdf_spawner" output="screen" pkg="gazebo_ros" type="spawn_model"/>
+    <!-- Load controllers -->
+    <rosparam command="load" file="$(find philos)/config/joints.yaml"/>
+    <!-- Controllers -->
+    <node args="joint_state_controller neck_row_joint_controller neck_yaw_joint_controller neck_pitch_joint_controller left_shoulder_row_joint_controller left_shoulder_pitch_joint_controller left_shoulder_yaw_joint_controller left_elbow_yaw_joint_controller left_elbow_row_joint_controller right_shoulder_row_joint_controller right_shoulder_pitch_joint_controller right_shoulder_yaw_joint_controller right_elbow_yaw_joint_controller right_elbow_row_joint_controller left_wrist_pitch_joint_controller right_wrist_pitch_joint_controller" name="controller_spawner" output="screen" pkg="controller_manager" respawn="false" type="spawner"/>
+    <!-- rviz -->
+    <include file="$(find philos)/launch/rviz.launch"/>
+    <!-- rqt -->
+     <node name="rqt_publisher" pkg="rqt_publisher" type="rqt_publisher" />
+</launch>

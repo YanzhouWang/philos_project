@@ -1,0 +1,11 @@
+Model Construction Description
+
+world-->body
+
+body-->"neck_row"-->neck_bottom-->"neck_yaw"-->neck_top-->"neck_pitch"-->head
+
+body-->"left_shoulder_pitch"-->left_shoulder-->"left_shoulder_row"-->left_shoulder_extension-->"left_arm_pitch"-->left_arm-->"left_elbow_pitch"-->left_arm_extension-->"left_elbow_row"-->left_forearm-->"left_gripper_pitch"-->left_gripper
+
+body-->"right_shoulder_pitch"-->right_shoulder-->"right_shoulder_row"-->right_shoulder_extension-->"right_arm_pitch"-->right_arm-->"right_elbow_pitch"-->right_arm_extension-->"right_elbow_row"-->right_forearm-->"right_gripper_pitch"-->right_gripper
+
+For the neck joints and left-side joints, positive rotations are taken as the same as direction of world coordinates; for right-side joints, positive rotations are taken as the opposite direction of world coordinates. This creates a consistent, "mirrorred" posture for positive joint values.

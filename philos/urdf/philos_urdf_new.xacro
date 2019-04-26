@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<robot name="philos" xmlns:xacro="https://www.ros.org/wiki/xacro">
+	<!-- Include xacro macro -->
+	<xacro:include filename="$(find philos)/urdf/joints_transmissions.xacro"/>
+
+	<!-- predefined values -->
+	<xacro:property name="arm_length" value="0.155"/>
+	<xacro:property name="forearm_length" value="0.15"/>
+
+	<xacro:property name="shoulder_x_location" value = "0.065"/>
+	<xacro:property name="shoulder_y_location" value = "0"/>
+	<xacro:property name="shoulder_z_location" value = "0.292"/>
+	<xacro:property name="elbow_row_offset" value="0.3"/>
+
+
+
+	<!-- robot description -->
+	<link name="world"/>
+
+	<joint name="fixed" type="fixed">
+		<parent link="world"/>
+		<child link="body"/>
+	</joint>
+
+	<link name="body">
+		<visual>
+			<origin rpy="1.57 0 0" xyz="-.0965 0.1 -0.13"/>
+			<geometry>
+				<mesh filename= "package://philos/meshes/body.STL" scale = "0.001 0.001 0.001"/>
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0.1758"/>
+			<geometry>
+				<box size="0.18 0.15213 0.33"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<origin rpy="0 0 0" xyz="0 0 0.1758"/>
+			<mass value="10" />
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "neck_row_joint" axis = "1 0 0" child = "neck_bottom" parent = "body"  e_limit = "1000" l_limit = "-0.5" u_limit = "0.5" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0.35" mechanicalReduction = "1"/>
+
+	<link name="neck_bottom">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0.011"/>
+			<geometry>
+				<box size="0.035 0.056 0.022"/>
+			</geometry>
+		</visual>
+		<!-- collision for the neck is turned off -->
+		<inertial>
+			<origin rpy="0 0 0" xyz="0 0 0.011"/>
+			<mass value="10" />
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "neck_yaw_joint" axis = "0 0 1" child = "neck_top" parent = "neck_bottom"  e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0.022" mechanicalReduction = "1"/>
+
+
+	<link name = "neck_top">
+		<visual>
+			<origin rpy = "0 0 0" xyz = "0 0 0.011"/>
+			<geometry>
+				<box size = "0.035 0.056 0.022"/>
+			</geometry>
+		</visual>
+		<!-- collision for the neck is turned off -->
+		<inertial>
+			<origin rpy="0 0 0" xyz="0 0 0.011"/>
+			<mass value="10" />
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "neck_pitch_joint" axis = "0 1 0" child = "head" parent = "neck_top"  e_limit = "1000" l_limit = "-0.3" u_limit = "0.3" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0.022" mechanicalReduction = "1"/>
+
+
+	<link name="head">
+		<visual>
+			<origin rpy="1.57 0 0" xyz="-0.113 0.165 -0.06"/>
+			<geometry>
+				<mesh filename = "package://philos/meshes/head.STL" scale = "0.001 0.001 0.001"/>
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0.03"/>
+			<geometry>
+				<box size="0.2 0.16 0.12"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<origin rpy="0 0 0" xyz="0 0 0.03"/>
+			<mass value="10" />
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "right_shoulder_yaw_joint" axis = "0 0 1" child = "right_shoulder_base" parent = "body" e_limit = "1000" l_limit = "-0.8" u_limit = "1.48" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "-${shoulder_x_location} ${shoulder_y_location} ${shoulder_z_location}" mechanicalReduction = "1"/>
+
+
+	<link name="right_shoulder_base">
+		<visual>
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<box size="0.02 0.02 0.02"/>
+			</geometry>
+		</visual>
+		<!-- <collision>
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<box size="0.02 0.02 0.02"/>
+			</geometry>
+		</collision> -->
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "right_shoulder_pitch_joint" axis = "0 -1 0" child = "right_shoulder_extension" parent = "right_shoulder_base" e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0" mechanicalReduction = "1"/>
+
+	<link name = "right_shoulder_extension">
+		<visual>
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</visual>
+		<!-- <collision>
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</collision> -->
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "right_shoulder_row_joint" axis="1 0 0" child = "right_arm" parent = "right_shoulder_extension" e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0" mechanicalReduction = "1"/>
+
+	<link name = "right_arm">
+		<visual>
+			<origin rpy = "0 1.57 1.57" xyz = "0.005 -0.8 0.769"/>			
+			<geometry>
+					<mesh filename = "package://philos/meshes/right_cover_upper.STL" scale = "0.001 0.0014 0.001"/>
+				<!-- <box size = "${arm_length} 0.02 0.02"/> -->
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy = "0 0 0" xyz = "-${arm_length/2} 0 0"/>
+			<geometry>
+				<box size = "${arm_length} 0.045 0.045"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "right_elbow_yaw_joint" axis = "0 0 1" child ="right_elbow_extension" parent = "right_arm" e_limit = "1000" l_limit = "${elbow_row_offset}" u_limit = "2.269" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "-${arm_length} 0 0" mechanicalReduction = "1"/>
+
+	<link name = "right_elbow_extension">
+		<visual>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</visual>
+		<!-- <collision>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</collision> -->
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		</inertial>
+	</link>
+
+	<joint_revolute name = "right_elbow_row_joint" axis = "1 0 0" child = "right_forearm" parent = "right_elbow_extension" e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0" mechanicalReduction = "1"/>
+
+	<link name = "right_forearm">
+		<visual>
+			<origin rpy = "0 0 -1.57" xyz = "-0.135 0.028 -0.03"/>
+			<geometry>
+				<mesh filename = "package://philos/meshes/right_cover_lower.STL" scale = "0.001 0.00135 0.001"/>
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy = "0 0 0" xyz = "-${forearm_length/2} 0 0"/>
+			<geometry>
+				<box size = "${forearm_length} 0.04 0.04"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		</inertial>
+	</link>
+
+	<joint_revolute name = "right_wrist_pitch_joint" axis = "0 -1 0" child = "right_gripper" parent = "right_forearm" e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "-${forearm_length} 0 0" mechanicalReduction = "1"/>
+
+	<link name = "right_gripper">
+		<visual>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</visual>
+		<collision>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		</inertial>
+	</link>
+
+	<joint_revolute name = "left_shoulder_yaw_joint" axis = "0 0 -1" child = "left_shoulder_base" parent = "body" e_limit = "1000" l_limit = "-0.8" u_limit = "1.48" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "${shoulder_x_location} ${shoulder_y_location} ${shoulder_z_location}" mechanicalReduction = "1"/>
+
+	<link name="left_shoulder_base">
+		<visual>
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<box size="0.02 0.02 0.02"/>
+			</geometry>
+		</visual>
+		<!-- <collision>
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<box size="0.02 0.02 0.02"/>
+			</geometry>
+		</collision> -->
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "left_shoulder_pitch_joint" axis = "0 1 0" child = "left_shoulder_extension" parent = "left_shoulder_base" e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0" mechanicalReduction = "1"/>
+
+	<link name = "left_shoulder_extension">
+		<visual>
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</visual>
+		<!-- <collision>
+			<origin rpy = "0 0 0" xyz = "0 0 0"/>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</collision> -->
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "left_shoulder_row_joint" axis="1 0 0" child = "left_arm" parent = "left_shoulder_extension" e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0" mechanicalReduction = "1"/>
+
+
+	<link name = "left_arm">
+		<visual>
+			<origin rpy = "0 1.57 1.57" xyz = "0.16 -0.8 0.769"/>
+			<geometry>
+				<mesh filename = "package://philos/meshes/left_cover_upper.STL" scale = "0.001 0.0014 0.001"/>
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy = "0 0 0" xyz = "${arm_length/2} 0 0"/>
+			<geometry>
+				<box size = "${arm_length} 0.045 0.045"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint_revolute name = "left_elbow_yaw_joint" axis = "0 0 -1" child ="left_elbow_extension" parent = "left_arm" e_limit = "1000" l_limit = "${elbow_row_offset}" u_limit = "2.269" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "${arm_length} 0 0" mechanicalReduction = "1"/>
+
+	<link name = "left_elbow_extension">
+		<visual>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</visual>
+		<!-- <collision>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</collision> -->
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		</inertial>
+	</link>
+
+	<joint_revolute name = "left_elbow_row_joint" axis = "1 0 0" child = "left_forearm" parent = "left_elbow_extension" e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "0 0 0" mechanicalReduction = "1"/>
+
+	<link name = "left_forearm">
+		<visual>
+			<origin rpy = "0 0 1.57" xyz = "0.135 -0.028 -0.03"/>
+			<geometry>
+				<mesh filename = "package://philos/meshes/left_cover_lower.STL" scale = "0.001 0.00135 0.001"/>
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy = "0 0 0" xyz = "${forearm_length/2} 0 0"/>
+			<geometry>
+				<box size = "${forearm_length} 0.04 0.04"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		</inertial>
+	</link>
+
+	<joint_revolute name = "left_wrist_pitch_joint" axis = "0 1 0" child = "left_gripper" parent = "left_forearm" e_limit = "1000" l_limit = "-1.507" u_limit = "1.507" v_limit = "0.5" origin_rpy = "0 0 0" origin_xyz = "${forearm_length} 0 0" mechanicalReduction = "1"/>
+
+	<link name = "left_gripper">
+		<visual>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</visual>
+		<collision>
+			<geometry>
+				<box size = "0.02 0.02 0.02"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value = "0.5"/>
+			<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		</inertial>
+	</link>
+	<!-- gazebo_ros_control plug-in -->
+	<gazebo>
+		<plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+			<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+		</plugin>
+		<world name="default">
+			<gui>
+			    <camera name="user_camera">
+			      <pose>0.5 -1.2 1 0 0.38 1.85</pose>
+			    </camera>
+			</gui>
+		</world>
+	</gazebo>
+
+</robot>
