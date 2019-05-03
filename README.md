@@ -26,3 +26,16 @@ roscd
 catkin_make
 ```
 To get the best result, make sure to check out my [robot_kinematics](https://github.com/YanzhouWang/robot_kinematics) program and do some calculations before make any design changes in the robot description.
+
+# Launch Files
+To launch *RViz* alone (for quick examination of configuration)
+`roslaunch philos rviz.launch`
+
+To launch *Gazebo and RViz*
+`roslaunch philos spawn.launch `
+
+To launch *MoveIt!*
+`roslaunch philos_moveit_config demo.launch`
+
+To launch *MoveIt! Setup Wizard*
+`roslaunch philos_moveit_config setup_assistant.launch`
